@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Partner 🎂</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Quicksand:wght@400;500;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Quicksand', sans-serif;
+    background: #1a1320;
+    margin: 0; padding: 0;
+    width: 100vw; height: 100vh;
+    overflow: hidden;
+  }
+
+  .screen {
+    display: none;
+    width: 100vw; height: 100vh; min-height: 100vh;
+    overflow-y: auto;
+    position: relative;
+    animation: fadeIn 0.45s ease;
+  }
+  .screen.active { display: flex; flex-direction: column; }
+  @keyframes fadeIn { from{opacity:0;transform:scale(0.96);} to{opacity:1;transform:scale(1);} }
+
+  /* ══════ S1 — PASSCODE ══════ */
+  #s1 {
+    background: linear-gradient(165deg,#ffd9e8 0%, #f7c6e0 40%, #e8b8e8 100%);
+    padding: 24px 18px;
+    flex-direction: row;
+    gap: 16px;
+    align-items: center;
+  }
+  .s1-left { flex:1; display:flex; flex-direction:column; align-items:center; gap:10px; }
+  .polaroid { background:white; padding:8px 8px 36px; transform:rotate(-3deg); box-shadow:5px 8px 22px rgba(150,60,120,0.28); position:relative; width:190px; border-radius:3px; }
+  .photo-ph { width:174px; height:170px; display:flex; align-items:center; justify-content:center; font-size:50px; background:linear-gradient(135deg,#ffc4dd,#ffe0ee); border-radius:2px; }
+  .bow { font-size:30px; position:absolute; top:-16px; right:-12px; filter:drop-shadow(1px 2px 3px rgba(0,0,0,0.2)); }
+  .s1-cap { font-family:'Caveat',cursive; font-size:20px; font-weight:700; color:#c2487a; text-align:center; margin-top:2px; }
+  .watermark { color:rgba(120,40,90,0.45); font-size:10px; margin-top:2px; }
+  .s1-right { flex:1; display:flex; flex-direction:column; align-items:center; gap:11px; }
+  .s1-right h3 { color:#7a2f5c; font-size:14px; font-weight:700; text-align:center; line-height:1.4; }
+  .digit-boxes { display:flex; gap:9px; }
+  .digit-box { width:36px; height:36px; border:2.5px solid #c2487a; border-radius:9px; background:rgba(255,255,255,0.5); display:flex; align-items:center; justify-content:center; color:#7a2f5c; font-size:20px; font-weight:800; }
+  .numpad { display:grid; grid-template-columns:repeat(3,1fr); gap:9px; }
+  .num-btn { width:46px; height:46px; border-radius:50%; background:white; color:#c2487a; font-size:17px; font-weight:800; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform 0.1s; font-family:'Quicksand',sans-serif; box-shadow:0 3px 8px rgba(150,60,120,0.2); }
+  .num-btn:active { transform:scale(0.88); }
+  .hint { color:rgba(122,47,92,0.75); font-size:11px; text-align:center; font-style:italic; }
+  .error-shake { animation:shake 0.4s ease; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-7px)} 75%{transform:translateX(7px)} }
+
+  /* ══════ S2 — CAKE SCENE ══════ */
+  #s2 {
+    background: linear-gradient(180deg, #2b1a3d 0%, #4a2860 45%, #1f1230 100%);
+    align-items: center; justify-content: center;
+    gap: 0; padding: 0; overflow: hidden;
+  }
+  .star-bg { position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; }
+  .star-dot { position:absolute; border-radius:50%; background:white; animation:twinkle 2s infinite alternate; }
+  @keyframes twinkle { from{opacity:0.2;} to{opacity:1;} }
+
+  .hb-scene-title { position:relative; z-index:2; text-align:center; margin-top:38px; line-height:1; }
+  .hb-happy {
+    font-size:42px; font-weight:800;
+    background:linear-gradient(90deg,#ffb3d9,#ffd9ec,#ffb3d9);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    letter-spacing:5px; filter:drop-shadow(0 0 10px rgba(255,179,217,0.6));
+  }
+  .hb-birthday {
+    font-size:42px; font-weight:800;
+    background:linear-gradient(90deg,#ffe08a,#fff3c4,#ffe08a);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    letter-spacing:5px; filter:drop-shadow(0 0 10px rgba(255,224,138,0.6));
+  }
+  .partner-name {
+    font-family:'Dancing Script',cursive; font-size:24px;
+    color:#ffe9f5; text-align:center; position:relative; z-index:2;
+    text-shadow:0 0 12px rgba(255,179,217,0.7); margin-top:6px;
+  }
+
+  .cake-scene { position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; width:100%; margin-top:8px; }
+  .chars-row { display:flex; align-items:flex-end; justify-content:center; gap:0; width:100%; max-width:340px; margin-bottom:-2px; }
+  .cake-svg-wrap { width:260px; height:220px; position:relative; }
+
+  .flame { animation:flicker 0.5s ease-in-out infinite alternate; transform-origin:bottom center; }
+  @keyframes flicker { 0%{transform:scaleY(1) scaleX(1) rotate(-2deg);opacity:1;} 50%{transform:scaleY(1.15) scaleX(0.88) rotate(1deg);opacity:0.9;} 100%{transform:scaleY(0.9) scaleX(1.1) rotate(3deg);opacity:1;} }
+  .flame2 { animation:flicker2 0.6s ease-in-out infinite alternate; transform-origin:bottom center; }
+  @keyframes flicker2 { 0%{transform:scaleY(0.95) scaleX(1.05) rotate(2deg);opacity:1;} 100%{transform:scaleY(1.1) scaleX(0.9) rotate(-2deg);opacity:0.92;} }
+  .flame3 { animation:flicker3 0.45s ease-in-out infinite alternate; transform-origin:bottom center; }
+  @keyframes flicker3 { 0%{transform:scaleY(1.05) rotate(-1deg);opacity:1;} 100%{transform:scaleY(0.88) rotate(2deg);opacity:0.88;} }
+
+  .gifts-below { display:flex; gap:16px; align-items:flex-end; justify-content:center; margin-top:-8px; position:relative; z-index:2; }
+
+  #s2 .blow-btn {
+    background:linear-gradient(135deg,#ff8fc7,#e85aa8);
+    color:white; border:none; border-radius:50px;
+    padding:13px 50px; font-size:17px; font-weight:800; cursor:pointer;
+    font-family:'Quicksand',sans-serif;
+    box-shadow:0 4px 20px rgba(232,90,168,0.5), 0 0 0 3px rgba(255,255,255,0.2);
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:1000;
+    letter-spacing:2px; animation:pulse-btn 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse-btn { 0%,100%{box-shadow:0 4px 20px rgba(232,90,168,0.5), 0 0 0 3px rgba(255,255,255,0.2);} 50%{box-shadow:0 4px 30px rgba(232,90,168,0.8), 0 0 0 6px rgba(255,255,255,0.3);} }
+  #s2 .blow-btn:active { transform:translateX(-50%) scale(0.93); }
+
+  /* ══════ S3 — GIFT BOXES ══════ */
+  #s3 {
+    background: linear-gradient(160deg,#fff0f6 0%, #fdeaf3 100%);
+    padding:30px 20px; align-items:center; gap:14px;
+  }
+  .gift-title { font-family:'Dancing Script',cursive; font-size:30px; color:#c2487a; text-align:center; margin-top:18px; }
+  .gift-subtitle-name { font-family:'Dancing Script',cursive; font-size:26px; color:#e85aa8; text-align:center; margin-top:-6px; }
+  .gifts-row { display:flex; gap:20px; justify-content:center; margin-top:30px; }
+  .gift-box { font-size:64px; cursor:pointer; transition:transform 0.2s; filter:drop-shadow(2px 6px 10px rgba(194,72,122,0.3)); }
+  .gift-box:active { transform:scale(0.88) rotate(-4deg); }
+  .gift-sub { color:#b06090; font-size:13px; text-align:center; margin-top:8px; font-style:italic; }
+
+  /* ══════ S4b — MAKE A WISH (handled inline) ══════ */
+
+  /* ══════ S5 — TRAIT CARDS COLLAGE ══════ */
+  #s5 {
+    background: linear-gradient(160deg,#fdf3ff 0%, #f3e8ff 100%);
+    padding:22px 16px 90px; align-items:center; gap:14px;
+  }
+  .s5-title { font-family:'Dancing Script',cursive; font-size:26px; color:#8b4ba8; text-align:center; font-style:italic; }
+  .trait-stack { display:flex; flex-direction:column; gap:14px; width:100%; max-width:420px; margin:0 auto; }
+  .trait-card {
+    background:white; border-radius:18px; padding:16px 18px;
+    box-shadow:0 6px 18px rgba(139,75,168,0.18);
+    display:flex; gap:14px; align-items:center;
+    border-left:6px solid var(--accent);
+  }
+  .trait-icon { font-size:34px; flex-shrink:0; }
+  .trait-text h4 { font-size:15px; color:#5c2d75; margin-bottom:3px; font-weight:700; }
+  .trait-text p { font-size:12.5px; color:#7a5590; line-height:1.5; }
+  .s5-back, .s6-back { background:#8b4ba8; color:white; border:none; border-radius:50px; padding:11px 28px; font-size:13px; font-weight:700; cursor:pointer; font-family:'Quicksand',sans-serif; position:fixed; bottom:18px; left:50%; transform:translateX(-50%); z-index:1000; box-shadow:0 4px 14px rgba(139,75,168,0.4); }
+  .s5-back:active, .s6-back:active { transform:translateX(-50%) scale(0.94); }
+
+  /* ══════ S6 — LETTER + ENVELOPE ══════ */
+  #s6 {
+    background: linear-gradient(160deg,#fff5f8 0%, #ffe8f0 100%);
+    padding:22px 16px 100px; gap:14px; align-items:center;
+  }
+  .s6-inner { display:flex; flex-direction:column; gap:16px; width:100%; max-width:420px; margin:0 auto; align-items:center; }
+  .stamp { width:42px; height:42px; background:#fff3d8; border:2px solid #e8b870; font-size:22px; display:flex; align-items:center; justify-content:center; align-self:flex-end; box-shadow:1px 1px 4px rgba(0,0,0,0.15); border-radius:3px; }
+  .envelope-outer { position:relative; width:100%; }
+  .env-flap { width:100%; height:0; border-left:calc(100%/2) solid transparent; border-right:calc(100%/2) solid transparent; border-top:48px solid #e85aa8; position:absolute; top:0; left:0; z-index:1; opacity:0.3; pointer-events:none; }
+  .env-body { background:#f472b6; border-radius:0 0 10px 10px; padding:54px 14px 16px; box-shadow:3px 6px 20px rgba(0,0,0,0.2); position:relative; z-index:2; }
+  .letter-out { background:white; padding:16px; font-family:'Caveat',cursive; font-size:16px; color:#222; line-height:1.55; box-shadow:0 2px 10px rgba(0,0,0,0.12); border-radius:6px; position:relative; z-index:5; max-height:340px; overflow-y:auto; }
+  .env-heart { text-align:center; font-size:32px; margin-top:10px; }
+
+  .photo-strip-wrap { display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .photo-strip { background:white; padding:7px 7px 0; transform:rotate(-2.5deg); box-shadow:4px 6px 16px rgba(0,0,0,0.18); width:130px; }
+  .sp-ph { width:116px; height:96px; display:block; margin-bottom:7px; background:linear-gradient(135deg,#ffc4dd,#e8c4ff); }
+  .strip-lbl { background:#8b4ba8; color:white; font-size:11px; font-weight:800; text-align:center; padding:6px 4px; letter-spacing:2px; }
+
+  /* ══════ CONFETTI ══════ */
+  #confetti { position:fixed; top:0; left:0; width:100vw; height:100vh; pointer-events:none; z-index:99999; overflow:hidden; }
+  .confetti-piece { position:absolute; top:-20px; border-radius:2px; animation:confettiFall linear forwards; }
+  @keyframes confettiFall { to { transform:translateY(110vh) rotate(540deg); opacity:0.3; } }
+</style>
+</head>
+<body>
+
+<div id="confetti"></div>
+
+<audio id="bgMusic" src="ReelAudio-60880.mp3" loop preload="auto"></audio>
+<button id="musicToggle" onclick="toggleMusic()" style="position:fixed;top:14px;right:14px;z-index:99998;width:42px;height:42px;border-radius:50%;border:none;background:rgba(255,255,255,0.85);box-shadow:0 3px 10px rgba(0,0,0,0.2);font-size:18px;cursor:pointer;display:none;align-items:center;justify-content:center;">🔊</button>
+
+<!-- S1: PASSCODE -->
+<div class="screen active" id="s1">
+  <div class="s1-left">
+    <div class="polaroid">
+      <span class="bow">🎀</span>
+      <div class="photo-ph" style="padding:0;overflow:hidden;">
+        <img src="IMG_20260701_011940_163.jpg" style="width:100%;height:100%;object-fit:cover;object-position:50% 15%;display:block;">
+      </div>
+    </div>
+    <div class="s1-cap">my favorite person ✨</div>
+    <div class="watermark">for my best friend 💕</div>
+  </div>
+  <div class="s1-right">
+    <h3>Enter the secret<br>code to unlock 🔐</h3>
+    <div class="digit-boxes" id="digitBoxes">
+      <div class="digit-box" id="d0"></div>
+      <div class="digit-box" id="d1"></div>
+      <div class="digit-box" id="d2"></div>
+      <div class="digit-box" id="d3"></div>
+    </div>
+    <div class="numpad">
+      <button class="num-btn" onclick="press('1')">1</button>
+      <button class="num-btn" onclick="press('2')">2</button>
+      <button class="num-btn" onclick="press('3')">3</button>
+      <button class="num-btn" onclick="press('4')">4</button>
+      <button class="num-btn" onclick="press('5')">5</button>
+      <button class="num-btn" onclick="press('6')">6</button>
+      <button class="num-btn" onclick="press('7')">7</button>
+      <button class="num-btn" onclick="press('8')">8</button>
+      <button class="num-btn" onclick="press('9')">9</button>
+      <button class="num-btn" onclick="del()">⌫</button>
+      <button class="num-btn" onclick="press('0')">0</button>
+      <button class="num-btn" style="visibility:hidden;">·</button>
+    </div>
+    <div class="hint">hint: our special date 💗</div>
+  </div>
+</div>
+
+<!-- S2: BIRTHDAY CAKE SCENE -->
+<div class="screen" id="s2">
+  <div class="star-bg" id="starBg"></div>
+
+  <div class="hb-scene-title">
+    <div class="hb-happy">HAPPY</div>
+    <div class="hb-birthday">BIRTHDAY</div>
+  </div>
+  <div class="partner-name">✨ my favorite human ✨</div>
+
+  <div class="cake-scene">
+    <div class="chars-row">
+      <!-- Left character: funny/bubbly -->
+      <svg width="72" height="90" viewBox="0 0 72 90" style="margin-right:-6px">
+        <circle cx="18" cy="22" r="12" fill="#f4a0c0"/>
+        <circle cx="54" cy="22" r="12" fill="#f4a0c0"/>
+        <circle cx="18" cy="22" r="7" fill="#ffc4dd"/>
+        <circle cx="54" cy="22" r="7" fill="#ffc4dd"/>
+        <ellipse cx="36" cy="10" rx="10" ry="6" fill="#ffe08a" transform="rotate(-30 36 10)"/>
+        <ellipse cx="36" cy="10" rx="10" ry="6" fill="#ffe08a" transform="rotate(30 36 10)"/>
+        <circle cx="36" cy="10" r="4" fill="#e8a020"/>
+        <ellipse cx="36" cy="36" rx="22" ry="20" fill="#f4a0c0"/>
+        <path d="M22,32 Q28,27 34,32" stroke="#111" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path d="M38,32 Q44,27 50,32" stroke="#111" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <ellipse cx="36" cy="44" rx="10" ry="6" fill="#a8264f"/>
+        <ellipse cx="36" cy="42" rx="8" ry="3" fill="white"/>
+        <ellipse cx="36" cy="68" rx="18" ry="20" fill="#f4a0c0"/>
+        <ellipse cx="36" cy="68" rx="11" ry="13" fill="#ffc4dd"/>
+        <ellipse cx="14" cy="62" rx="8" ry="14" fill="#f4a0c0" transform="rotate(-30 14 62)"/>
+        <ellipse cx="58" cy="62" rx="8" ry="14" fill="#f4a0c0" transform="rotate(30 58 62)"/>
+      </svg>
+
+      <!-- Center: cake -->
+      <svg width="140" height="160" viewBox="0 0 140 160" class="cake-svg-wrap" style="width:140px;height:160px;">
+        <rect x="30" y="55" width="8" height="28" rx="3" fill="#ff8fc7"/>
+        <rect x="30" y="55" width="8" height="8" rx="1" fill="#e85aa8"/>
+        <rect x="30" y="63" width="8" height="8" rx="1" fill="#ffd9ec"/>
+        <g class="flame" style="transform-box:fill-box;">
+          <ellipse cx="34" cy="50" rx="4" ry="7" fill="#ff9800"/>
+          <ellipse cx="34" cy="48" rx="2.5" ry="5" fill="#ffeb3b"/>
+          <ellipse cx="34" cy="46" rx="1.2" ry="3" fill="white" opacity="0.8"/>
+          <ellipse cx="34" cy="50" rx="6" ry="9" fill="#ff9800" opacity="0.15"/>
+        </g>
+        <rect x="66" y="45" width="8" height="35" rx="3" fill="#c8a0ff"/>
+        <rect x="66" y="45" width="8" height="8" rx="1" fill="#9966e0"/>
+        <rect x="66" y="53" width="8" height="8" rx="1" fill="#e8d9ff"/>
+        <g class="flame2" style="transform-box:fill-box;">
+          <ellipse cx="70" cy="40" rx="4" ry="7" fill="#ff9800"/>
+          <ellipse cx="70" cy="38" rx="2.5" ry="5" fill="#ffeb3b"/>
+          <ellipse cx="70" cy="36" rx="1.2" ry="3" fill="white" opacity="0.8"/>
+          <ellipse cx="70" cy="40" rx="6" ry="9" fill="#ff9800" opacity="0.15"/>
+        </g>
+        <rect x="102" y="55" width="8" height="28" rx="3" fill="#8fd9c4"/>
+        <rect x="102" y="55" width="8" height="8" rx="1" fill="#4cb896"/>
+        <rect x="102" y="63" width="8" height="8" rx="1" fill="#d4f5e8"/>
+        <g class="flame3" style="transform-box:fill-box;">
+          <ellipse cx="106" cy="50" rx="4" ry="7" fill="#ff9800"/>
+          <ellipse cx="106" cy="48" rx="2.5" ry="5" fill="#ffeb3b"/>
+          <ellipse cx="106" cy="46" rx="1.2" ry="3" fill="white" opacity="0.8"/>
+          <ellipse cx="106" cy="50" rx="6" ry="9" fill="#ff9800" opacity="0.15"/>
+        </g>
+        <ellipse cx="70" cy="82" rx="54" ry="12" fill="#ffd9ec"/>
+        <rect x="16" y="82" width="108" height="26" fill="#ffd9ec"/>
+        <ellipse cx="70" cy="108" rx="54" ry="12" fill="#ff8fc7"/>
+        <path d="M25,82 Q30,72 35,82 Q42,70 48,82 Q55,72 61,82 Q68,70 74,82 Q80,72 86,82 Q92,70 98,82 Q104,72 110,82 Q116,70 121,82" fill="white" opacity="0.6"/>
+        <ellipse cx="70" cy="108" rx="60" ry="14" fill="#e85aa8"/>
+        <rect x="10" y="108" width="120" height="32" fill="#e85aa8"/>
+        <ellipse cx="70" cy="140" rx="60" ry="14" fill="#c2487a"/>
+        <path d="M18,108 Q24,96 30,108 Q38,95 46,108 Q53,96 60,108 Q67,96 74,108 Q81,96 88,108 Q95,96 102,108 Q109,96 116,108 Q122,96 128,108" fill="white" opacity="0.55"/>
+        <ellipse cx="45" cy="80" rx="7" ry="8" fill="#e53984"/>
+        <path d="M42,73 Q45,68 48,73" fill="#4caf50" stroke="#4caf50" stroke-width="1"/>
+        <line x1="45" y1="72" x2="45" y2="68" stroke="#4caf50" stroke-width="1.5"/>
+        <ellipse cx="95" cy="80" rx="7" ry="8" fill="#e53984"/>
+        <path d="M92,73 Q95,68 98,73" fill="#4caf50"/>
+        <line x1="95" y1="72" x2="95" y2="68" stroke="#4caf50" stroke-width="1.5"/>
+        <circle cx="43" cy="79" r="1" fill="#ffcdd2"/>
+        <circle cx="47" cy="81" r="0.8" fill="#ffcdd2"/>
+        <circle cx="93" cy="79" r="1" fill="#ffcdd2"/>
+        <circle cx="97" cy="81" r="0.8" fill="#ffcdd2"/>
+        <text x="8" y="78" font-size="10" fill="#ffd700">✦</text>
+        <text x="122" y="75" font-size="10" fill="#ffd700">✦</text>
+        <text x="12" y="100" font-size="7" fill="#ff8fc7">✦</text>
+        <text x="126" y="102" font-size="7" fill="#c8a0ff">✦</text>
+        <ellipse cx="70" cy="140" rx="66" ry="10" fill="#e0e0e0"/>
+        <ellipse cx="70" cy="140" rx="60" ry="7" fill="#f5f5f5"/>
+      </svg>
+
+      <!-- Right character: soft-hearted -->
+      <svg width="72" height="90" viewBox="0 0 72 90" style="margin-left:-6px">
+        <ellipse cx="24" cy="14" rx="7" ry="18" fill="#c8a0ff"/>
+        <ellipse cx="48" cy="14" rx="7" ry="18" fill="#c8a0ff"/>
+        <ellipse cx="24" cy="14" rx="4" ry="13" fill="#e8d9ff"/>
+        <ellipse cx="48" cy="14" rx="4" ry="13" fill="#e8d9ff"/>
+        <ellipse cx="36" cy="38" rx="22" ry="20" fill="#c8a0ff"/>
+        <circle cx="28" cy="36" r="4" fill="#111"/>
+        <circle cx="44" cy="36" r="4" fill="#111"/>
+        <circle cx="29" cy="35" r="1.5" fill="white"/>
+        <circle cx="45" cy="35" r="1.5" fill="white"/>
+        <ellipse cx="22" cy="42" rx="5" ry="3" fill="#ffb3d1" opacity="0.7"/>
+        <ellipse cx="50" cy="42" rx="5" ry="3" fill="#ffb3d1" opacity="0.7"/>
+        <path d="M29,44 Q36,51 43,44" stroke="#111" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <ellipse cx="36" cy="47" rx="5" ry="3" fill="#e85aa8" opacity="0.7"/>
+        <ellipse cx="36" cy="68" rx="18" ry="20" fill="#c8a0ff"/>
+        <ellipse cx="36" cy="68" rx="11" ry="13" fill="#e8d9ff"/>
+        <path d="M28,64 Q36,56 44,64 Q40,72 36,68 Q32,72 28,64Z" fill="#ff8fc7"/>
+        <ellipse cx="13" cy="60" rx="7" ry="13" fill="#c8a0ff" transform="rotate(30 13 60)"/>
+        <ellipse cx="59" cy="57" rx="7" ry="13" fill="#c8a0ff" transform="rotate(-20 59 57)"/>
+      </svg>
+    </div>
+
+    <div class="gifts-below">
+      <svg width="48" height="48" viewBox="0 0 48 48">
+        <rect x="4" y="20" width="40" height="26" rx="3" fill="#ff8fc7"/>
+        <rect x="4" y="20" width="40" height="10" rx="2" fill="#e85aa8"/>
+        <rect x="20" y="4" width="8" height="42" fill="#fff3c4"/>
+        <rect x="4" y="20" width="40" height="8" fill="#fff3c4" opacity="0.4"/>
+        <ellipse cx="20" cy="14" rx="8" ry="5" fill="#c8a0ff" transform="rotate(-30 20 14)"/>
+        <ellipse cx="28" cy="14" rx="8" ry="5" fill="#c8a0ff" transform="rotate(30 28 14)"/>
+        <circle cx="24" cy="14" r="4" fill="#8b4ba8"/>
+      </svg>
+      <svg width="58" height="56" viewBox="0 0 58 56">
+        <rect x="4" y="22" width="50" height="30" rx="4" fill="#c8a0ff"/>
+        <rect x="4" y="22" width="50" height="12" rx="3" fill="#9966e0"/>
+        <rect x="24" y="4" width="10" height="48" fill="#fff3c4"/>
+        <rect x="4" y="22" width="50" height="10" fill="#fff3c4" opacity="0.35"/>
+        <ellipse cx="23" cy="14" rx="9" ry="5" fill="#ff8fc7" transform="rotate(-30 23 14)"/>
+        <ellipse cx="35" cy="14" rx="9" ry="5" fill="#ff8fc7" transform="rotate(30 35 14)"/>
+        <circle cx="29" cy="14" r="5" fill="#e85aa8"/>
+      </svg>
+      <svg width="48" height="48" viewBox="0 0 48 48">
+        <rect x="4" y="20" width="40" height="26" rx="3" fill="#8fd9c4"/>
+        <rect x="4" y="20" width="40" height="10" rx="2" fill="#4cb896"/>
+        <rect x="20" y="4" width="8" height="42" fill="#ff8fc7"/>
+        <rect x="4" y="20" width="40" height="8" fill="#ff8fc7" opacity="0.4"/>
+        <ellipse cx="20" cy="14" rx="8" ry="5" fill="#ffe08a" transform="rotate(-30 20 14)"/>
+        <ellipse cx="28" cy="14" rx="8" ry="5" fill="#ffe08a" transform="rotate(30 28 14)"/>
+        <circle cx="24" cy="14" r="4" fill="#e8a020"/>
+      </svg>
+    </div>
+  </div>
+
+  <button class="blow-btn" onclick="blow()">🎂 BLOW</button>
+</div>
+
+<!-- S3: GIFT BOXES -->
+<div class="screen" id="s3">
+  <div class="gift-title">Gifts for you,</div>
+  <div class="gift-subtitle-name">my favorite person 🌸</div>
+  <div class="gifts-row">
+    <div class="gift-box" onclick="go('s4b')">🎁</div>
+    <div class="gift-box" onclick="go('s5')">🎁</div>
+    <div class="gift-box" onclick="go('s6')">🎁</div>
+  </div>
+  <div class="gift-sub">tap any gift to open it</div>
+  <div style="color:#c2487a;font-size:13px;margin-top:auto;font-family:'Dancing Script',cursive;">made with so much love 💕</div>
+</div>
+
+<!-- S4b: GIFT 1 — Make a Wish / Candle Blowing -->
+<div class="screen" id="s4b" style="background:linear-gradient(160deg,#fdeaf3,#f3e0ff);padding:28px 20px 100px;align-items:center;gap:14px;">
+  <div id="s4b-wish" style="display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;">
+    <div style="font-family:'Dancing Script',cursive;font-size:34px;color:#8b4ba8;text-align:center;">Make a wish! 🌟</div>
+    <div style="font-size:100px;text-align:center;">🎂</div>
+    <div style="font-size:34px;text-align:center;letter-spacing:2px;" id="candles4b">🕯️🕯️🕯️🕯️🕯️🕯️🕯️</div>
+    <div style="flex:1"></div>
+    <button style="background:#e85aa8;color:white;border:none;border-radius:50px;padding:13px 40px;font-size:17px;font-weight:800;cursor:pointer;font-family:'Quicksand',sans-serif;box-shadow:0 4px 14px rgba(232,90,168,0.4);position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:1000;letter-spacing:1px;" onclick="blowGift1()">🌬️ BLOW</button>
+  </div>
+  <div id="s4b-done" style="display:none;flex-direction:column;align-items:center;gap:14px;width:100%;">
+    <div style="font-size:26px;font-weight:800;color:#8b4ba8;text-align:center;padding:0 20px;line-height:1.4;">
+      ✨ Happy Birthday<br>to my favorite person! 🌸
+    </div>
+    <div style="font-size:100px;text-align:center;">🎂</div>
+    <div style="font-size:34px;text-align:center;letter-spacing:2px;opacity:0.25;">🕯️🕯️🕯️🕯️🕯️🕯️🕯️</div>
+    <div style="background:white;border-radius:16px;padding:16px 20px;margin:0 16px;font-family:'Caveat',cursive;font-size:18px;color:#5c2d75;text-align:center;line-height:1.7;box-shadow:0 4px 14px rgba(139,75,168,0.15);">
+      May this year bring you everything you're chasing — and remind you how loved you already are. 💕🌟
+    </div>
+    <div style="flex:1"></div>
+    <button style="background:#8b4ba8;color:white;border:none;border-radius:50px;padding:10px 28px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Quicksand',sans-serif;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:1000;" onclick="resetGift1();go('s3')">BACK</button>
+  </div>
+</div>
+
+<!-- S5: GIFT 2 — Trait cards (her personality) -->
+<div class="screen" id="s5">
+  <div class="s5-title">A few things about you 🌷</div>
+
+  <div style="width:96px;height:96px;border-radius:50%;overflow:hidden;border:4px solid white;box-shadow:0 6px 18px rgba(139,75,168,0.3);margin:-4px auto 4px;">
+    <img src="IMG_20260701_011931_137.jpg" style="width:100%;height:100%;object-fit:cover;object-position:50% 20%;display:block;">
+  </div>
+
+  <div class="trait-stack">
+    <div class="trait-card" style="--accent:#ff8fc7;">
+      <div class="trait-icon">😂</div>
+      <div class="trait-text">
+        <h4>Effortlessly funny</h4>
+        <p>You make even the dullest days feel like an inside joke only we'd get. Your humor is genuinely your superpower.</p>
+      </div>
+    </div>
+    <div class="trait-card" style="--accent:#c8a0ff;">
+      <div class="trait-icon">🤍</div>
+      <div class="trait-text">
+        <h4>Soft-hearted</h4>
+        <p>Underneath all the jokes, you care so deeply — about people, about doing right by them. That heart of yours doesn't go unnoticed.</p>
+      </div>
+    </div>
+    <div class="trait-card" style="--accent:#8fd9c4;">
+      <div class="trait-icon">🎯</div>
+      <div class="trait-text">
+        <h4>Quietly ambitious</h4>
+        <p>You chase your goals with a focus that's honestly inspiring. Watching you build your career has been one of my favorite things.</p>
+      </div>
+    </div>
+    <div class="trait-card" style="--accent:#ffe08a;">
+      <div class="trait-icon">🏡</div>
+      <div class="trait-text">
+        <h4>Family girl, through and through</h4>
+        <p>The way you show up for your family says everything about who you are. That kind of loyalty is rare.</p>
+      </div>
+    </div>
+  </div>
+
+  <button class="s5-back" onclick="go('s3')">BACK</button>
+</div>
+
+<!-- S6: GIFT 3 — Letter + Photo Strip -->
+<div class="screen" id="s6">
+  <div class="s6-inner">
+
+    <div class="photo-strip-wrap">
+      <div style="background:white;border:2px solid #c8a0ff;border-radius:10px;padding:4px 11px;font-size:12px;font-weight:700;color:#8b4ba8;">to my favorite person</div>
+      <div class="photo-strip">
+        <img src="IMG_20260701_011928_286.jpg" class="sp-ph" style="object-fit:cover;">
+        <img src="IMG_20260701_012021.jpg" class="sp-ph" style="object-fit:cover;">
+        <img src="IMG_20260701_011942_866.jpg" class="sp-ph" style="object-fit:cover;">
+        <div class="strip-lbl">US ✨</div>
+      </div>
+    </div>
+
+    <div style="width:100%;">
+      <div class="stamp">🌸</div>
+      <div class="envelope-outer">
+        <div class="env-flap"></div>
+        <div class="env-body">
+          <div class="letter-out">
+            From the day you came into my life, everything became brighter. 🌈 You are not just my best friend—you are my safe place, my happiness, and my biggest strength. 🤍🥹<br><br>
+            🌸 Thank you for standing by me in every smile 😊 and every tear. 😢 You never let me feel alone, and your friendship is the most beautiful gift I have ever received. 🎁💕<br><br>
+            ✨ No matter how busy life gets or how far we are, our friendship will always stay strong. ♾️🤝 Distance can never change the bond we share. ❤️🌍<br><br>
+            🌹 I pray that you always stay happy, healthy, and successful. 🌟 May every dream you have come true, and may your life always be filled with love, peace, and endless smiles. 🎂🎉💐<br><br>
+            💝 Thank you for being the amazing person you are. I promise to stand by your side through every chapter of life. 🫶🥹 Happiest birthday darling ❤️.
+          </div>
+          <div class="env-heart">❤️</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <button class="s6-back" onclick="go('s3')">BACK</button>
+</div>
+
+<script>
+  const PASSCODE = '1234';
+  let input = '';
+
+  function go(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function press(num) {
+    if (input.length >= 4) return;
+    input += num;
+    updateBoxes();
+    if (input.length === 4) setTimeout(check, 200);
+  }
+
+  function del() {
+    input = input.slice(0, -1);
+    updateBoxes();
+  }
+
+  function updateBoxes() {
+    for (let i = 0; i < 4; i++) {
+      document.getElementById('d' + i).textContent = input[i] ? '●' : '';
+    }
+  }
+
+  function check() {
+    if (input === PASSCODE) {
+      spawnConfetti();
+      setTimeout(() => { go('s2'); startMusic(); }, 400);
+    } else {
+      const boxes = document.getElementById('digitBoxes');
+      boxes.classList.add('error-shake');
+      document.querySelectorAll('.digit-box').forEach(b => b.style.borderColor = '#ff6699');
+      setTimeout(() => {
+        boxes.classList.remove('error-shake');
+        document.querySelectorAll('.digit-box').forEach(b => b.style.borderColor = '#c2487a');
+        input = '';
+        updateBoxes();
+      }, 500);
+    }
+  }
+
+  function blowGift1() {
+    spawnConfetti();
+    document.getElementById('s4b-wish').style.display = 'none';
+    document.getElementById('s4b-done').style.display = 'flex';
+  }
+
+  function resetGift1() {
+    document.getElementById('s4b-wish').style.display = 'flex';
+    document.getElementById('s4b-done').style.display = 'none';
+  }
+
+  function blow() {
+    spawnConfetti();
+    go('s3');
+  }
+
+  function startMusic() {
+    const audio = document.getElementById('bgMusic');
+    const btn = document.getElementById('musicToggle');
+    audio.volume = 0.5;
+    audio.play().then(() => {
+      btn.style.display = 'flex';
+      btn.textContent = '🔊';
+    }).catch(() => {
+      // Autoplay blocked — show button so user can start it manually
+      btn.style.display = 'flex';
+      btn.textContent = '🔇';
+    });
+  }
+
+  function toggleMusic() {
+    const audio = document.getElementById('bgMusic');
+    const btn = document.getElementById('musicToggle');
+    if (audio.paused) {
+      audio.play();
+      btn.textContent = '🔊';
+    } else {
+      audio.pause();
+      btn.textContent = '🔇';
+    }
+  }
+
+  function spawnConfetti() {
+    const wrap = document.getElementById('confetti');
+    wrap.innerHTML = '';
+    const colors = ['#ff8fc7','#ffe08a','#c8a0ff','#8fd9c4','#ffb3d9','#ffd9ec','#e85aa8'];
+    for (let i = 0; i < 70; i++) {
+      const p = document.createElement('div');
+      p.className = 'confetti-piece';
+      p.style.left = Math.random() * 100 + 'vw';
+      p.style.background = colors[Math.floor(Math.random() * colors.length)];
+      p.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+      p.style.animationDelay = Math.random() * 0.6 + 's';
+      p.style.width = (6 + Math.random() * 9) + 'px';
+      p.style.height = (6 + Math.random() * 9) + 'px';
+      wrap.appendChild(p);
+    }
+    setTimeout(() => wrap.innerHTML = '', 3800);
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const bg = document.getElementById('starBg');
+    if (!bg) return;
+    for (let i = 0; i < 50; i++) {
+      const s = document.createElement('div');
+      s.className = 'star-dot';
+      const size = 1 + Math.random() * 3;
+      s.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-delay:${Math.random()*3}s;animation-duration:${1.5+Math.random()*2}s;`;
+      bg.appendChild(s);
+    }
+  });
+</script>
+</body>
+</html>
